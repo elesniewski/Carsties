@@ -48,7 +48,7 @@ public class BidsController : ControllerBase
             Bidder = User.Identity.Name
         };
 
-        if (auction.AuctionEnd < DateTime.UtcNow)
+        if (auction.AuctionEnd > DateTime.UtcNow)
         {
             bid.BidStatus = BidStatus.Finished;
         }

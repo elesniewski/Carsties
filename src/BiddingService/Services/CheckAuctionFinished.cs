@@ -1,9 +1,5 @@
-
-
-using System.Collections.ObjectModel;
 using Contracts;
 using MassTransit;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using MongoDB.Entities;
 
 namespace BiddingService;
