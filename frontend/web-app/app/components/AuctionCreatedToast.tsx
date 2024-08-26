@@ -11,14 +11,14 @@ export default function AuctionCreatedToast({auction}: Props) {
   return (
     <Link href={`/auctions/details/${auction.id}`} className='flex flex-col items-center'>
         <div className='flex flex-row items-center gap-2'>
-            <Image
+            <Image 
                 src={auction.imageUrl}
-                alt='image'
+                alt='Image of car'
                 height={80}
                 width={80}
-                className='rounded-log w-auto h-auto'
+                className='rounded-lg w-auto h-auto'
             />
-            <span>New Auction! {auction.make} {auction.model} has been added.</span>
+            <span>New Auction! {auction.make} {auction.model} has been added</span>
         </div>
     </Link>
   )

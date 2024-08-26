@@ -1,4 +1,4 @@
-import { getTokenWorkaround } from "@/app/actions/authActions";
+import { auth } from '@/auth';
 
 const baseUrl = process.env.API_URL;
 
@@ -9,7 +9,8 @@ async function get(url: string) {
     }
 
     const response = await fetch(baseUrl + url, requestOptions);
-    return await handleResponse(response);
+
+    return handleResponse(response);
 }
 
 async function post(url: string, body: {}) {
@@ -18,8 +19,10 @@ async function post(url: string, body: {}) {
         headers: await getHeaders(),
         body: JSON.stringify(body)
     }
+
     const response = await fetch(baseUrl + url, requestOptions);
-    return await handleResponse(response);
+
+    return handleResponse(response);
 }
 
 async function put(url: string, body: {}) {
@@ -28,8 +31,10 @@ async function put(url: string, body: {}) {
         headers: await getHeaders(),
         body: JSON.stringify(body)
     }
+
     const response = await fetch(baseUrl + url, requestOptions);
-    return await handleResponse(response);
+
+    return handleResponse(response);
 }
 
 async function del(url: string) {
@@ -37,22 +42,25 @@ async function del(url: string) {
         method: 'DELETE',
         headers: await getHeaders()
     }
+
     const response = await fetch(baseUrl + url, requestOptions);
-    return await handleResponse(response);
+
+    return handleResponse(response);
 }
 
 async function getHeaders() {
-    const token = await getTokenWorkaround();
-    const headers = {'Content-type': 'application/json'} as any;
-    if (token) {
-        headers.Authorization = 'Bearer ' + token.access_token
+    const session = await auth();
+    const headers = {
+        'Content-type': 'application/json'
+    } as any;
+    if (session?.accessToken) {
+        headers.Authorization = 'Bearer ' + session.accessToken
     }
     return headers;
 }
 
 async function handleResponse(response: Response) {
     const text = await response.text();
-    // const data = text && JSON.parse(text);
     let data;
     try {
         data = JSON.parse(text);
@@ -65,10 +73,9 @@ async function handleResponse(response: Response) {
     } else {
         const error = {
             status: response.status,
-            message: typeof data === 'string' ? data : response.statusText
+            message: typeof(data === 'string') ? data : response.statusText
         }
-
-        return {error};
+        return {error}
     }
 }
 

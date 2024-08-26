@@ -1,13 +1,14 @@
-﻿using Contracts;
+﻿using System;
+using Contracts;
 using MassTransit;
 
-namespace AuctionService;
+namespace AuctionService.Consumers;
 
 public class AuctionCreatedFaultConsumer : IConsumer<Fault<AuctionCreated>>
 {
     public async Task Consume(ConsumeContext<Fault<AuctionCreated>> context)
     {
-        Console.WriteLine("--> COnsuming faulty creation");
+        Console.WriteLine("--> Consuming faulty upsert");
 
         var exception = context.Message.Exceptions.First();
 
@@ -15,7 +16,8 @@ public class AuctionCreatedFaultConsumer : IConsumer<Fault<AuctionCreated>>
         {
             context.Message.Message.Model = "FooBar";
             await context.Publish(context.Message.Message);
-        } else
+        }
+        else
         {
             Console.WriteLine("Not an argument exception - update error dashboard somewhere");
         }

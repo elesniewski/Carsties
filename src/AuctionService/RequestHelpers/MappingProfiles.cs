@@ -4,7 +4,6 @@ using AutoMapper;
 using Contracts;
 
 namespace AuctionService.RequestHelpers;
-
 public class MappingProfiles : Profile
 {
     public MappingProfiles()

@@ -1,8 +1,9 @@
 ﻿using Contracts;
 using MassTransit;
 using MongoDB.Entities;
+using SearchService.Models;
 
-namespace SearchService;
+namespace SearchService.Consumers;
 
 public class AuctionDeletedConsumer : IConsumer<AuctionDeleted>
 {
@@ -15,5 +16,4 @@ public class AuctionDeletedConsumer : IConsumer<AuctionDeleted>
         if (!result.IsAcknowledged)
             throw new MessageException(typeof(AuctionDeleted), "Problem deleting auction");
     }
-
 }

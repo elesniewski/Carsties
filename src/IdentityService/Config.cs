@@ -1,5 +1,4 @@
-﻿using System.Runtime.Intrinsics.Arm;
-using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Models;
 
 namespace IdentityService;
 

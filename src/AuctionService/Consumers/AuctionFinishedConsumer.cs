@@ -1,22 +1,19 @@
-﻿using AuctionService.Data;
+﻿using System;
+using AuctionService.Data;
 using AuctionService.Entities;
 using Contracts;
 using MassTransit;
 
-namespace AuctionService;
+namespace AuctionService.Consumers;
 
-public class AuctionFinishedConsumer : IConsumer<AuctionFinished>
+public class AuctionFinishedConsumer(AuctionDbContext dbContext) : IConsumer<AuctionFinished>
 {
-    private readonly AuctionDbContext _dbContext;
-    public AuctionFinishedConsumer(AuctionDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
     public async Task Consume(ConsumeContext<AuctionFinished> context)
     {
         Console.WriteLine("--> Consuming auction finished");
 
-        var auction = await _dbContext.Auctions.FindAsync(Guid.Parse(context.Message.AuctionId));
+        var auction = await dbContext.Auctions.FindAsync(Guid.Parse(context.Message.AuctionId))
+            ?? throw new MessageException(typeof(AuctionFinished), "Cannot retrieve this auction");
 
         if (context.Message.ItemSold)
         {
@@ -27,6 +24,6 @@ public class AuctionFinishedConsumer : IConsumer<AuctionFinished>
         auction.Status = auction.SoldAmount > auction.ReservePrice
             ? Status.Finished : Status.ReserveNotMet;
 
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 }
